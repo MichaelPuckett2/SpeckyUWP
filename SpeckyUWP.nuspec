@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>Triple G3</authors>
+    <owners>Michael Puckett, II</owners>
+    <projectUrl>https://github.com/MichaelPuckett2/SpeckyUWP</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Init</releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags>Specky, SpeckyUWP, UWP, MVVM, Reactive</tags>
+  </metadata>
+</package>
