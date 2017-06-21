@@ -4,9 +4,11 @@ using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 
 namespace Specky.UI.Interaction
 {
+    [Bindable]
     public class VisualStateCommand : DependencyObject
     {
         public const string DefaultState = "PrimaryCommandState";
