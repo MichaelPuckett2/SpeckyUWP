@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+using System;
 
 namespace Specky.UI.Interaction
 {
@@ -17,6 +18,8 @@ namespace Specky.UI.Interaction
         private const string DataContextPropertyName = "DataContext";
         private const string CommandPropertyName = "Command";
         private const string CommandParamaterPropertyName = "CommandParameter";
+        private const string CheckedVisualStatePropertyName = "CheckedVisualState";
+        private const string NotCheckedVisualStatePropertyName = "NotCheckedVisualState";
 
         public static void SetVisualState(ButtonBase frameworkElement, string value)
             => frameworkElement.SetValue(VisualStateProperty, value);
@@ -53,15 +56,44 @@ namespace Specky.UI.Interaction
                                                         if (dialog == null)
                                                             return;
 
-                                                        var showState = GetVisualState(button);
                                                         var dataContext = GetDataContext(button);
-                                                        var originalCommand = button.Command;                                                 
-                                                        button.Command = new RelayCommand(obj => setStateControl(button, dialog, showState, dataContext, originalCommand, button.CommandParameter));
-                                                    }                                                    
+                                                        var originalCommand = button.Command;
+                                                        button.Command = new RelayCommand(obj => setStateControl(button, dialog, dataContext, originalCommand, button.CommandParameter));
+                                                    }
                                                 })));
 
-        private static void setStateControl(ButtonBase button, Control dialog, string showState, object dataContext, ICommand originalCommand, object commandParameter)
+        private static string getToggleButtonState(ToggleButton toggleButton)
+            => (toggleButton.IsChecked).GetValueOrDefault() ? GetCheckedVisualState(toggleButton) 
+                                                            : GetNotCheckedVisualState(toggleButton);
+
+        #region ToggleButtonAttachedProperties
+
+        public static string GetCheckedVisualState(ToggleButton toggleButton)
+            => (string)toggleButton.GetValue(CheckedVisualStateProperty);
+        public static void SetCheckedVisualState(ToggleButton toggleButton, string value)
+            => toggleButton.SetValue(CheckedVisualStateProperty, value);
+        public static readonly DependencyProperty CheckedVisualStateProperty =
+            DependencyProperty.RegisterAttached(CheckedVisualStatePropertyName, typeof(string), typeof(VisualStateCommand), new PropertyMetadata(string.Empty));
+
+        public static string GetNotCheckedVisualState(ToggleButton toggleButton)
+            => (string)toggleButton.GetValue(NotCheckedVisualStateProperty);
+        public static void SetNotCheckedVisualState(ToggleButton toggleButton, string value)
+            => toggleButton.SetValue(NotCheckedVisualStateProperty, value);
+        public static readonly DependencyProperty NotCheckedVisualStateProperty =
+            DependencyProperty.RegisterAttached(NotCheckedVisualStatePropertyName, typeof(string), typeof(VisualStateCommand), new PropertyMetadata(string.Empty));
+
+        #endregion
+
+        private static void setStateControl(ButtonBase button, Control dialog, object dataContext, ICommand originalCommand, object commandParameter)
         {
+            string showState = string.Empty;
+
+            if (button is ToggleButton toggleButton)
+                showState = getToggleButtonState(toggleButton);
+
+            if (string.IsNullOrEmpty(showState))
+                showState = GetVisualState(button);
+
             SetDataContext(dialog, dataContext);
             SetCommand(dialog, originalCommand);
             SetCommandParameter(dialog, commandParameter);
@@ -90,3 +122,69 @@ namespace Specky.UI.Interaction
             DependencyProperty.RegisterAttached(CommandParamaterPropertyName, typeof(object), typeof(VisualStateCommand), new PropertyMetadata(null));
     }
 }
+
+/*  EXAMPLE OF USEAGE
+
+ <Page x:Name="page"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:SpeckyInteraction="using:Specky.UI.Interaction"
+      x:Class="SpecktUI_UWP_Tester.MainPage"
+      mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="DialogGroup">
+                <VisualState x:Name="ShowDialogState">
+                    <VisualState.Setters>
+                        <Setter Target="textBlock.Visibility"
+                                Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="HideDialogState">
+                    <VisualState.Setters>
+                        <Setter Target="textBlock.Visibility"
+                                Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid Name="textBlock"
+                    Visibility="Collapsed"
+              Width="300"
+              Height="120">
+            <Rectangle Fill="Red" />
+            <TextBlock Text="{Binding (SpeckyInteraction:VisualStateCommand.DataContext), ElementName=page}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+        </Grid>
+
+        <StackPanel VerticalAlignment="Center">
+            <Button Content="Show Dialog 1"
+                    SpeckyInteraction:VisualStateCommand.StateControl="page"
+                    SpeckyInteraction:VisualStateCommand.VisualState="ShowDialogState"
+                    SpeckyInteraction:VisualStateCommand.DataContext="Button 1"/>
+
+            <Button Content="Show Dialog 2"
+                    SpeckyInteraction:VisualStateCommand.StateControl="page"
+                    SpeckyInteraction:VisualStateCommand.VisualState="ShowDialogState"
+                    SpeckyInteraction:VisualStateCommand.DataContext="Button 2" />
+
+            <Button Content="Close Dialog"
+                    SpeckyInteraction:VisualStateCommand.StateControl="page"
+                    SpeckyInteraction:VisualStateCommand.VisualState="HideDialogState" />
+
+            <CheckBox Content="Show or Hide"
+                      SpeckyInteraction:VisualStateCommand.StateControl="page"
+                      SpeckyInteraction:VisualStateCommand.CheckedVisualState="ShowDialogState"
+                      SpeckyInteraction:VisualStateCommand.NotCheckedVisualState="HideDialogState"
+                      SpeckyInteraction:VisualStateCommand.DataContext="CheckBox" />
+        </StackPanel>
+
+    </Grid>
+</Page>
+
+*/
