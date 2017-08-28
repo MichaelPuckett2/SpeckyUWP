@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Specky.Commands
+namespace SpeckyUWP.Commands
 {
     public class RelayCommand : ICommand
     {

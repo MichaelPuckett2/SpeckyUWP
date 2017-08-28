@@ -3,7 +3,7 @@ using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Specky.UI.Extensions
+namespace SpeckyUWP.UI.Extensions
 {
     public static partial class UIElementExtensions
     {

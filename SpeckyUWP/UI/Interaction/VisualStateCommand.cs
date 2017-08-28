@@ -1,12 +1,12 @@
-﻿using Specky.Commands;
-using Specky.UI.Extensions;
+﻿using SpeckyUWP.Commands;
+using SpeckyUWP.UI.Extensions;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 
-namespace Specky.UI.Interaction
+namespace SpeckyUWP.UI.Interaction
 {
     [Bindable]
     public class VisualStateCommand : DependencyObject

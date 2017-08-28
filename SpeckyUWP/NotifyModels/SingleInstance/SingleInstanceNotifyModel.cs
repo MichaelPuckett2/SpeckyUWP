@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using static Specky.Constants;
+using static SpeckyUWP.Constants;
 
-namespace Specky.NotifyModels.SingleInstance
+namespace SpeckyUWP.NotifyModels.SingleInstance
 {
     public class SingleInstanceNotifyModel<T> : NotifyModelBase where T : class
     {

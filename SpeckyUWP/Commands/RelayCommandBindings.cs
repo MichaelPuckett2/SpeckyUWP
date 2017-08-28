@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Specky.Commands
+namespace SpeckyUWP.Commands
 {
     public sealed class RelayCommandBindings
     {

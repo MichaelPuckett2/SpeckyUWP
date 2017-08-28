@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 
-namespace Specky.Commands
+namespace SpeckyUWP.Commands
 {
     public class AutoRelayCommand : ICommand
     {

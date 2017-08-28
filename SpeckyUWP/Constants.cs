@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace Specky
+namespace SpeckyUWP
 {
     public static class Constants
     {

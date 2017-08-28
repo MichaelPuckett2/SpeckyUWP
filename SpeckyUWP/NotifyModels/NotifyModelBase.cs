@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Specky.NotifyModels
+namespace SpeckyUWP.NotifyModels
 {
     public class NotifyModelBase : INotifyPropertyChanged
     {
