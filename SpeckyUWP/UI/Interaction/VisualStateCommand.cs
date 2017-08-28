@@ -5,7 +5,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-using System;
 
 namespace Specky.UI.Interaction
 {
@@ -25,14 +24,20 @@ namespace Specky.UI.Interaction
             => frameworkElement.SetValue(VisualStateProperty, value);
         public static string GetVisualState(ButtonBase frameworkElement)
             => (string)frameworkElement.GetValue(VisualStateProperty);
+        /// <summary>
+        /// The name of the VisualState to set when the button command is triggered.
+        /// Note: This will remove the original button command, if any exists, and send it to the StateControl under the property VisualStateCommand.Command which can be bound to as needed.
+        /// </summary>
         public static readonly DependencyProperty VisualStateProperty =
             DependencyProperty.RegisterAttached(VisualStatePropertyName, typeof(string), typeof(VisualStateCommand), new PropertyMetadata(DefaultState));
-
 
         public static string GetStateControl(ButtonBase button)
             => (string)button.GetValue(StateControlProperty);
         public static void SetStateControl(ButtonBase button, string value)
             => button.SetValue(StateControlProperty, value);
+        /// <summary>
+        /// The name of the control that owns the VisualStates.
+        /// </summary>
         public static readonly DependencyProperty StateControlProperty =
             DependencyProperty.RegisterAttached(StateControlPropertyName,
                                                 typeof(string),
@@ -72,6 +77,9 @@ namespace Specky.UI.Interaction
             => (string)toggleButton.GetValue(CheckedVisualStateProperty);
         public static void SetCheckedVisualState(ToggleButton toggleButton, string value)
             => toggleButton.SetValue(CheckedVisualStateProperty, value);
+        /// <summary>
+        /// The name of the VisualState to set when IsChecked=True.
+        /// </summary>
         public static readonly DependencyProperty CheckedVisualStateProperty =
             DependencyProperty.RegisterAttached(CheckedVisualStatePropertyName, typeof(string), typeof(VisualStateCommand), new PropertyMetadata(string.Empty));
 
@@ -79,6 +87,9 @@ namespace Specky.UI.Interaction
             => (string)toggleButton.GetValue(NotCheckedVisualStateProperty);
         public static void SetNotCheckedVisualState(ToggleButton toggleButton, string value)
             => toggleButton.SetValue(NotCheckedVisualStateProperty, value);
+        /// <summary>
+        /// The name of the VisualState to set when IsChecked=False.
+        /// </summary>
         public static readonly DependencyProperty NotCheckedVisualStateProperty =
             DependencyProperty.RegisterAttached(NotCheckedVisualStatePropertyName, typeof(string), typeof(VisualStateCommand), new PropertyMetadata(string.Empty));
 
@@ -104,6 +115,9 @@ namespace Specky.UI.Interaction
             => frameworkElement.SetValue(DataContextProperty, value);
         public static object GetDataContext(UIElement frameworkElement)
             => frameworkElement.GetValue(DataContextProperty);
+        /// <summary>
+        /// The VisualStateCommand.DataContext.  It is set by the button that is pressed and can be bound by the StateControl for use.  This allows for dynamically passing DataContext to the StateControl.
+        /// </summary>
         public static readonly DependencyProperty DataContextProperty =
             DependencyProperty.RegisterAttached(DataContextPropertyName, typeof(object), typeof(VisualStateCommand), new PropertyMetadata(null));
 
@@ -118,6 +132,9 @@ namespace Specky.UI.Interaction
             => frameworkElement.SetValue(CommandProperty, value);
         public static object GetCommandParameter(UIElement frameworkElement)
             => frameworkElement.GetValue(CommandParameterProperty);
+        /// <summary>
+        /// The CommandParameter used by the button sending the command and passed to the StateControl for binding as needed.
+        /// </summary>
         public static readonly DependencyProperty CommandParameterProperty =
             DependencyProperty.RegisterAttached(CommandParamaterPropertyName, typeof(object), typeof(VisualStateCommand), new PropertyMetadata(null));
     }
@@ -125,6 +142,7 @@ namespace Specky.UI.Interaction
 
 /*  EXAMPLE OF USEAGE
 
+ <!-- In this example the Page 'page' is the StateControl.  It is set via VisualStateCommand.StateControl by name and contains the VisualStates we wish to Command. -->
  <Page x:Name="page"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -154,8 +172,8 @@ namespace Specky.UI.Interaction
 
         <Grid Name="textBlock"
                     Visibility="Collapsed"
-              Width="300"
-              Height="120">
+                    Width="300"
+                    Height="120">
             <Rectangle Fill="Red" />
             <TextBlock Text="{Binding (SpeckyInteraction:VisualStateCommand.DataContext), ElementName=page}"
                        HorizontalAlignment="Center"
@@ -164,9 +182,9 @@ namespace Specky.UI.Interaction
 
         <StackPanel VerticalAlignment="Center">
             <Button Content="Show Dialog 1"
-                    SpeckyInteraction:VisualStateCommand.StateControl="page"
-                    SpeckyInteraction:VisualStateCommand.VisualState="ShowDialogState"
-                    SpeckyInteraction:VisualStateCommand.DataContext="Button 1"/>
+                    SpeckyInteraction:VisualStateCommand.StateControl="page" <!-- The page control we wish to set the VisualState on -->
+                    SpeckyInteraction:VisualStateCommand.VisualState="ShowDialogState" <!-- The VisualState we wish to set on the page -->
+                    SpeckyInteraction:VisualStateCommand.DataContext="Button 1"/>  <!-- The DataContext we wish to pass to the page when we set this VisualState -->
 
             <Button Content="Show Dialog 2"
                     SpeckyInteraction:VisualStateCommand.StateControl="page"
